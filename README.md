@@ -72,6 +72,91 @@ phase_4_frontend/
 3. Navegue pelas diferentes páginas usando o menu lateral
 4. Teste as funcionalidades de validação no formulário de contato
 
+## 🌐 Deploy na Vercel
+
+Este projeto está configurado para deploy na Vercel. Siga os passos abaixo:
+
+### Opção 1: Deploy via CLI (Recomendado)
+
+1. **Instale a CLI da Vercel** (se ainda não tiver):
+
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Faça login na Vercel**:
+
+   ```bash
+   vercel login
+   ```
+
+3. **No diretório do projeto, execute**:
+
+   ```bash
+   vercel
+   ```
+
+4. **Siga as instruções**:
+
+   - Confirme o diretório do projeto
+   - Escolha se deseja vincular a um projeto existente ou criar um novo
+   - A Vercel detectará automaticamente as configurações do `vercel.json`
+
+5. **Para fazer deploy em produção**:
+   ```bash
+   vercel --prod
+   ```
+
+### Opção 2: Deploy via GitHub (Recomendado para CI/CD)
+
+1. **Faça push do código para o GitHub**:
+
+   ```bash
+   git add .
+   git commit -m "Configuração para deploy na Vercel"
+   git push origin main
+   ```
+
+2. **Acesse [vercel.com](https://vercel.com)** e faça login
+
+3. **Clique em "Add New Project"**
+
+4. **Importe seu repositório do GitHub**
+
+5. **A Vercel detectará automaticamente**:
+
+   - Framework: Other (Static Site)
+   - Build Command: (deixe vazio ou use `npm run build`)
+   - Output Directory: (deixe vazio, pois os arquivos estão na raiz)
+
+6. **Clique em "Deploy"**
+
+7. **Pronto!** Seu site estará disponível em uma URL como `seu-projeto.vercel.app`
+
+### Configuração
+
+O arquivo `vercel.json` já está configurado para:
+
+- Servir arquivos estáticos
+- Redirecionar rotas corretamente
+- Funcionar com a estrutura de pastas do projeto
+
+### Variáveis de Ambiente (se necessário)
+
+Se precisar adicionar variáveis de ambiente no futuro:
+
+1. Acesse o dashboard da Vercel
+2. Vá em Settings → Environment Variables
+3. Adicione as variáveis necessárias
+
+### Domínio Personalizado
+
+Para usar um domínio personalizado:
+
+1. Acesse o dashboard da Vercel
+2. Vá em Settings → Domains
+3. Adicione seu domínio e siga as instruções de DNS
+
 ## 📱 Páginas Disponíveis
 
 ### 1. Dashboard (`index.html`)
