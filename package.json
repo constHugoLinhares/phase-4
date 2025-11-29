@@ -1,0 +1,40 @@
+{
+  "name": "germoplasma-hub",
+  "version": "1.0.0",
+  "description": "Sistema de dashboard para banco de germoplasma com modelo de marketplace",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Build completed'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": [
+    "germoplasma",
+    "dashboard",
+    "marketplace",
+    "sementes",
+    "mudas",
+    "agricultura"
+  ],
+  "author": "GermoplasmaHub Team",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^5.3.0",
+    "font-awesome": "^6.0.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/germoplasmahub/dashboard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/germoplasmahub/dashboard/issues"
+  },
+  "homepage": "https://github.com/germoplasmahub/dashboard#readme",
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

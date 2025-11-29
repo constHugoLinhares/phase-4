@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GermoplasmaHub - Fale Conosco</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <style>
+        /* Mostrar .invalid-feedback automaticamente quando o campo estiver inválido e não vazio */
+        #email:invalid:not(:placeholder-shown) + #emailHelp + #emailError,
+        #email:invalid:not(:placeholder-shown) + .invalid-feedback {
+          display: block;
+        }
+
+        /* Opcional: estilo para o input inválido/valido (Bootstrap já tem classes, mas se quiser forçar) */
+        #email:invalid:not(:placeholder-shown) {
+          border-color: #dc3545; /* vermelho */
+          box-shadow: 0 0 0 .2rem rgba(220,53,69,.25);
+        }
+        #email:valid {
+          border-color: #198754; /* verde */
+          box-shadow: 0 0 0 .2rem rgba(25,135,84,.15);
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar"></div>
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar
+            <div class="col-md-3 col-lg-2">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h5>Menu Principal</h5>
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="marketplace.html"><i class="fas fa-store"></i> Marketplace</a></li>
+                        <li><a href="stock.html"><i class="fas fa-boxes"></i> Estoque</a></li>
+                        <li><a href="checklist.html"><i class="fas fa-clipboard-check"></i> Checklist</a></li>
+                        <li><a href="contact.html" class="active"><i class="fas fa-envelope"></i> Fale Conosco</a></li>
+                    </ul>
+                </div>
+            </div> -->
+
+            <!-- Main Contact Content -->
+            <div class="container-fluid col-md-9">
+                <div class="contact-content">
+                    <!-- <div class="page-header">
+                        <h1>Fale Conosco</h1>
+                        <p class="text-muted">Entre em contato conosco para dúvidas, sugestões ou suporte</p>
+                    </div> -->
+
+                    <div class="row">
+                        <!-- Contact Form -->
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Envie sua Mensagem</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form id="contactForm">
+                                        <div id="formMessage" class="mb-3" aria-live="polite"></div>
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="firstName" class="form-label">Nome *</label>
+                                                <input type="text" class="form-control" id="firstName" name="firstName" autocomplete="given-name" required>
+                                                <div class="invalid-feedback">Por favor, informe seu nome.</div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="lastName" class="form-label">Sobrenome *</label>
+                                                <input type="text" class="form-control" id="lastName" name="lastName" autocomplete="family-name" required>
+                                                <div class="invalid-feedback">Por favor, informe seu sobrenome.</div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">E-mail *</label>
+                                            <input
+                                                type="email"
+                                                class="form-control"
+                                                id="email"
+                                                name="email"
+                                                required
+                                                pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
+                                                placeholder="usuario@dominio.com"
+                                                aria-describedby="emailHelp emailError"
+                                            >
+                                            <div id="emailHelp" class="form-text">Digite um e‑mail válido (ex: xxxxxxx@xxxxx.com)</div>
+                                            <div id="emailError" class="invalid-feedback">Digite um e‑mail válido</div>
+                                        </div>
+                                        <!-- <div class="mb-3">
+                                            <label for="email" class="form-label">E-mail *</label>
+                                            <input type="email" class="form-control" id="email" name="email" >
+                                            <div id="emailError" class="text-danger mt-2" role="alert" aria-live="assertive"></div>
+                                            <div class="invalid-feedback">
+                                                Por favor, informe um e-mail válido.
+                                            </div>
+                                        </div> -->
+                                        <div class="mb-3">
+                                            <label for="phone" class="form-label">Telefone</label>
+                                            <!-- inputmode para teclado móvel; maxlength para limitar entrada formatada -->
+                                            <input type="tel" inputmode="tel" class="form-control" id="phone" name="phone" autocomplete="tel"
+                                                placeholder="(99) 99999-9999" maxlength="20" aria-describedby="phoneHelp">
+                                            <div class="form-text" id="phoneHelp">Digite apenas números ou use formatação. Validação aceitará 10 ou 11 dígitos.</div>
+                                            <div class="invalid-feedback">
+                                                Por favor, informe um telefone válido (10 ou 11 dígitos).
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="subject" class="form-label">Assunto *</label>
+                                            <select class="form-select" id="subject" name="subject" autocomplete="off" required>
+                                                <option value="">Selecione um assunto</option>
+                                                <option value="duvida">Dúvida sobre produtos</option>
+                                                <option value="suporte">Suporte técnico</option>
+                                                <option value="sugestao">Sugestão</option>
+                                                <option value="reclamacao">Reclamação</option>
+                                                <option value="parceria">Parceria</option>
+                                                <option value="outro">Outro</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Por favor, selecione um assunto.
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="message" class="form-label">Mensagem *</label>
+                                            <textarea class="form-control" id="message" name="message" rows="5" autocomplete="off" required minlength="10"></textarea>
+                                            <div class="invalid-feedback">
+                                                Por favor, escreva uma mensagem com pelo menos 10 caracteres.
+                                            </div>
+                                        </div>
+                                        <!-- <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" autocomplete="off">
+                                            <label class="form-check-label" for="newsletter">
+                                                Desejo receber novidades e promoções por e-mail
+                                            </label>
+                                        </div> -->
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane"></i>Enviar Mensagem
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer"></div>
+    <script src="../assets/js/layout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Contact form behavior handled in ../assets/js/main.js -->
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

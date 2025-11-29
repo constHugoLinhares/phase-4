@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GermoplasmaHub - Marketplace</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="../assets/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <div id="navbar"></div>
+    <!-- Main Content -->
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar
+            <div class="col-md-3 col-lg-2">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h5>Menu Principal</h5>
+                    </div>
+                    <ul class="sidebar-menu">
+                        <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="marketplace.html" class="active"><i class="fas fa-store"></i> Marketplace</a></li>
+                        <li><a href="stock.html"><i class="fas fa-boxes"></i> Estoque</a></li>
+                        <li><a href="checklist.html"><i class="fas fa-clipboard-check"></i> Checklist</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope"></i> Fale Conosco</a></li>
+                    </ul>
+                </div>
+            </div> -->
+
+            <!-- Main Marketplace Content -->
+            <div class="container-fluid col-md-9">
+                <div class="marketplace-content">
+
+                    <!-- Search and Filters -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="search-bar">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Buscar sementes ou mudas...">
+                                    <button class="btn btn-outline-secondary" type="button">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="filter-dropdown">
+                                <select class="form-select">
+                                    <option>Todas as categorias</option>
+                                    <option>Hortaliças</option>
+                                    <option>Frutíferas</option>
+                                    <option>Plantas ornamentais</option>
+                                    <option>Plantas medicinais</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Grid - Renderizado dinamicamente -->
+                    <div class="row" id="productGrid">
+                        <!-- Os produtos serão carregados aqui dinamicamente via JavaScript -->
+                    </div>
+
+                    <!-- Pagination -->
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Anterior</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Próximo</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer"></div>
+    <script src="../assets/js/layout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/products-data.js"></script>
+    <script src="../assets/js/marketplace.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

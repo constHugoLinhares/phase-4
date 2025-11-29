@@ -1,0 +1,51 @@
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid col-md-9">
+        <a class="navbar-brand" href="../index.html">
+            <i class="fas fa-seedling me-2"></i>
+            GermoplasmaHub
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="marketplace.html">Marketplace</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="checklist.html">Viveiros</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Fale Conosco</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link position-relative" href="#" id="cartDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-badge" id="cartBadge">0</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end cart-dropdown" aria-labelledby="cartDropdown">
+                        <div class="cart-header">
+                            <h6 class="mb-0">Meu Carrinho</h6>
+                        </div>
+                        <div class="cart-items" id="cartItems">
+                            <div class="empty-cart">
+                                <i class="fas fa-shopping-basket"></i>
+                                <p>Seu carrinho está vazio</p>
+                            </div>
+                        </div>
+                        <div class="cart-footer" id="cartFooter" style="display: none;">
+                            <div class="cart-total">
+                                <strong>Total:</strong>
+                                <strong id="cartTotal">R$ 0,00</strong>
+                            </div>
+                            <a href="checkout.html" class="btn btn-success w-100 mt-2">
+                                <i class="fas fa-shopping-cart me-2"></i>
+                                Finalizar Compra
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

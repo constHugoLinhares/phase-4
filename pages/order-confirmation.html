@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Confirmado - GermoplasmaHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <style>
+        .confirmation-container {
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        .success-icon {
+            width: 120px;
+            height: 120px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease;
+        }
+
+        .success-icon i {
+            font-size: 60px;
+            color: white;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .confirmation-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .order-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #28a745;
+            margin-bottom: 1rem;
+        }
+
+        .order-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .order-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-info-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .order-info-value {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .order-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 1.5rem;
+        }
+
+        .order-item-details {
+            flex: 1;
+        }
+
+        .order-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-item-quantity {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .order-item-price {
+            font-weight: 700;
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 3rem;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #dee2e6;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-icon {
+            position: absolute;
+            left: -2.85rem;
+            width: 30px;
+            height: 30px;
+            background: white;
+            border: 3px solid #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline-icon.pending {
+            border-color: #dee2e6;
+        }
+
+        .timeline-icon i {
+            font-size: 0.8rem;
+            color: #28a745;
+        }
+
+        .timeline-icon.pending i {
+            color: #dee2e6;
+        }
+
+        .timeline-content h6 {
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .timeline-content p {
+            margin: 0;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        .btn-primary-custom {
+            background: #28a745;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background: #218838;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-outline-custom {
+            background: white;
+            color: #28a745;
+            padding: 0.75rem 2rem;
+            border: 2px solid #28a745;
+            border-radius: 5px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            background: #28a745;
+            color: white;
+        }
+
+        .alert-info-custom {
+            background: #e8f5e9;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1.5rem;
+        }
+
+        .sharing-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .sharing-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .sharing-button:hover {
+            transform: scale(1.1);
+        }
+
+        .sharing-button.whatsapp {
+            background: #25D366;
+        }
+
+        .sharing-button.email {
+            background: #0066cc;
+        }
+
+        .sharing-button.print {
+            background: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar incluída dinamicamente -->
+    <div id="navbar-placeholder"></div>
+
+    <div class="confirmation-container">
+        <div class="text-center">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h1 class="mb-3">Pedido Confirmado!</h1>
+            <p class="text-muted mb-4">
+                Obrigado por sua compra! Seu pedido foi recebido e está sendo processado.
+            </p>
+        </div>
+
+        <div class="confirmation-card">
+            <div class="order-number text-center">
+                Pedido <span id="order-number">#</span>
+            </div>
+
+            <div class="order-info">
+                <div class="order-info-row">
+                    <span class="order-info-label">Data do Pedido:</span>
+                    <span class="order-info-value" id="order-date"></span>
+                </div>
+                <div class="order-info-row">
+                    <span class="order-info-label">Status:</span>
+                    <span class="order-info-value">
+                        <span class="badge bg-success">Confirmado</span>
+                    </span>
+                </div>
+                <div class="order-info-row">
+                    <span class="order-info-label">Valor Total:</span>
+                    <span class="order-info-value text-success" id="order-total"></span>
+                </div>
+            </div>
+
+            <h5 class="mb-3">
+                <i class="fas fa-box me-2"></i>
+                Itens do Pedido
+            </h5>
+            <div id="order-items">
+                <!-- Preenchido dinamicamente -->
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h6 class="mb-3">
+                        <i class="fas fa-map-marker-alt me-2 text-success"></i>
+                        Endereço de Entrega
+                    </h6>
+                    <div class="bg-light p-3 rounded" id="order-address">
+                        <!-- Preenchido dinamicamente -->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="mb-3">
+                        <i class="fas fa-credit-card me-2 text-success"></i>
+                        Pagamento
+                    </h6>
+                    <div class="bg-light p-3 rounded" id="order-payment">
+                        <!-- Preenchido dinamicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-info-custom">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Importante:</strong> Você receberá um e-mail de confirmação com todos os detalhes do seu pedido.
+                Guarde o número do pedido para acompanhamento.
+            </div>
+        </div>
+
+        <div class="confirmation-card">
+            <h5 class="mb-4">
+                <i class="fas fa-truck me-2"></i>
+                Acompanhe seu Pedido
+            </h5>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h6>Pedido Confirmado</h6>
+                        <p id="timeline-confirmed">Hoje</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon pending">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h6>Em Preparação</h6>
+                        <p>Aguardando processamento</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon pending">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h6>Em Transporte</h6>
+                        <p>Aguardando envio</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-icon pending">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <h6>Entregue</h6>
+                        <p>Previsão: <span id="delivery-estimate"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="marketplace.html" class="btn-primary-custom">
+                <i class="fas fa-store"></i>
+                Continuar Comprando
+            </a>
+            <a href="#" onclick="printOrder()" class="btn-outline-custom">
+                <i class="fas fa-print"></i>
+                Imprimir Comprovante
+            </a>
+        </div>
+
+        <div class="text-center mt-4">
+            <p class="text-muted mb-2">Compartilhar:</p>
+            <div class="sharing-buttons">
+                <a href="#" class="sharing-button whatsapp" onclick="shareWhatsApp()" title="Compartilhar no WhatsApp">
+                    <i class="fab fa-whatsapp"></i>
+                </a>
+                <a href="#" class="sharing-button email" onclick="shareEmail()" title="Enviar por e-mail">
+                    <i class="fas fa-envelope"></i>
+                </a>
+                <a href="#" class="sharing-button print" onclick="printOrder()" title="Imprimir">
+                    <i class="fas fa-print"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer incluído dinamicamente -->
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/order-confirmation.js"></script>
+</body>
+</html>
+
+
+

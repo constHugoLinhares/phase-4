@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - GermoplasmaHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="../assets/css/style.css" rel="stylesheet">
+    <style>
+        .checkout-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .checkout-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .checkout-steps::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background: #dee2e6;
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .step.completed .step-circle {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            text-align: center;
+        }
+
+        .step.active .step-label {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .checkout-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 992px) {
+            .checkout-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkout-form {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .order-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+
+        .btn-checkout {
+            background: #28a745;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-checkout:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+        }
+
+        .summary-item {
+            display: flex;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 1rem;
+        }
+
+        .summary-item-details {
+            flex: 1;
+        }
+
+        .summary-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-item-price {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .summary-total {
+            border-top: 2px solid #dee2e6;
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .summary-row.total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #28a745;
+            margin-top: 1rem;
+        }
+
+        .shipping-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .shipping-option {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .shipping-option:hover {
+            border-color: #28a745;
+        }
+
+        .shipping-option input[type="radio"] {
+            margin-right: 1rem;
+        }
+
+        .shipping-option.selected {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .badge-free-shipping {
+            background: #28a745;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-discount {
+            background: #ffc107;
+            color: #333;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .card-brand-icon {
+            width: 40px;
+            height: 25px;
+            margin-left: 0.5rem;
+        }
+
+        .installments-info {
+            background: #e8f5e9;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #28a745;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .cep-searching::after {
+            content: '';
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #28a745;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        .security-badges {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .empty-cart-message i {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 1rem;
+        }
+
+        .input-group-cep {
+            position: relative;
+        }
+
+        .btn-search-cep {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .btn-search-cep:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar incluída dinamicamente -->
+    <div id="navbar-placeholder"></div>
+
+    <div class="checkout-container">
+        <!-- Carrinho vazio -->
+        <div id="empty-cart-message" class="empty-cart-message" style="display: none;">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>Seu carrinho está vazio</h3>
+            <p class="text-muted">Adicione produtos ao carrinho para continuar com a compra.</p>
+            <a href="marketplace.html" class="btn btn-checkout">
+                <i class="fas fa-store me-2"></i>
+                Ir para o Marketplace
+            </a>
+        </div>
+
+        <!-- Conteúdo do checkout -->
+        <div id="checkout-main" style="display: none;">
+            <!-- Etapas -->
+            <div class="checkout-steps">
+                <div class="step active" id="step-1">
+                    <div class="step-circle">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="step-label">Endereço</div>
+                </div>
+                <div class="step" id="step-2">
+                    <div class="step-circle">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="step-label">Pagamento</div>
+                </div>
+                <div class="step" id="step-3">
+                    <div class="step-circle">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="step-label">Confirmação</div>
+                </div>
+            </div>
+
+            <!-- Conteúdo -->
+            <div class="checkout-content">
+                <!-- Formulário -->
+                <div class="checkout-form">
+                    <!-- Etapa 1: Endereço -->
+                    <div class="form-section active" id="section-address">
+                        <h4 class="mb-4">
+                            <i class="fas fa-map-marker-alt me-2 text-success"></i>
+                            Endereço de Entrega
+                        </h4>
+                        
+                        <form id="address-form">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="cep" class="form-label">
+                                        CEP <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group-cep">
+                                        <input type="text" class="form-control" id="cep" 
+                                               placeholder="00000-000" maxlength="9" required>
+                                    </div>
+                                    <small class="text-muted">
+                                        <a href="https://buscacepinter.correios.com.br/app/endereco/index.php" target="_blank">
+                                            Não sei meu CEP
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="street" class="form-label">
+                                        Rua <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="street" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="number" class="form-label">
+                                        Número <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="number" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="complement" class="form-label">Complemento</label>
+                                    <input type="text" class="form-control" id="complement" 
+                                           placeholder="Apto, Bloco, etc.">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="neighborhood" class="form-label">
+                                        Bairro <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="neighborhood" required>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="city" class="form-label">
+                                        Cidade <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="city" required>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="state" class="form-label">
+                                        Estado <span class="text-danger">*</span>
+                                    </label>
+                                    <select class="form-select" id="state" required>
+                                        <option value="">Selecione</option>
+                                        <option value="AC">AC</option>
+                                        <option value="AL">AL</option>
+                                        <option value="AP">AP</option>
+                                        <option value="AM">AM</option>
+                                        <option value="BA">BA</option>
+                                        <option value="CE">CE</option>
+                                        <option value="DF">DF</option>
+                                        <option value="ES">ES</option>
+                                        <option value="GO">GO</option>
+                                        <option value="MA">MA</option>
+                                        <option value="MT">MT</option>
+                                        <option value="MS">MS</option>
+                                        <option value="MG">MG</option>
+                                        <option value="PA">PA</option>
+                                        <option value="PB">PB</option>
+                                        <option value="PR">PR</option>
+                                        <option value="PE">PE</option>
+                                        <option value="PI">PI</option>
+                                        <option value="RJ">RJ</option>
+                                        <option value="RN">RN</option>
+                                        <option value="RS">RS</option>
+                                        <option value="RO">RO</option>
+                                        <option value="RR">RR</option>
+                                        <option value="SC">SC</option>
+                                        <option value="SP">SP</option>
+                                        <option value="SE">SE</option>
+                                        <option value="TO">TO</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="recipient-name" class="form-label">
+                                        Nome do destinatário <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="recipient-name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="recipient-phone" class="form-label">
+                                        Telefone <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="tel" class="form-control" id="recipient-phone" 
+                                           placeholder="(00) 00000-0000" required>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="marketplace.html" class="btn btn-back">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Continuar Comprando
+                                </a>
+                                <button type="button" class="btn btn-checkout" onclick="nextStep(2)">
+                                    Continuar
+                                    <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Etapa 2: Pagamento -->
+                    <div class="form-section" id="section-payment">
+                        <h4 class="mb-4">
+                            <i class="fas fa-credit-card me-2 text-success"></i>
+                            Forma de Pagamento
+                        </h4>
+
+                        <form id="payment-form">
+                            <div class="mb-4">
+                                <label class="form-label">Método de Pagamento</label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="payment-method" 
+                                           id="credit-card" value="credit" checked>
+                                    <label class="form-check-label" for="credit-card">
+                                        <i class="fas fa-credit-card me-2"></i>
+                                        Cartão de Crédito
+                                    </label>
+                                </div>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="payment-method" 
+                                           id="debit-card" value="debit">
+                                    <label class="form-check-label" for="debit-card">
+                                        <i class="fas fa-credit-card me-2"></i>
+                                        Cartão de Débito
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment-method" 
+                                           id="pix" value="pix">
+                                    <label class="form-check-label" for="pix">
+                                        <i class="fas fa-qrcode me-2"></i>
+                                        PIX
+                                        <span class="badge bg-success ms-2">Aprovação Imediata</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="card-number" class="form-label">
+                                    Número do Cartão <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="card-number" 
+                                       placeholder="0000 0000 0000 0000" maxlength="19" required>
+                                <small class="text-muted" id="card-brand"></small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="card-name" class="form-label">
+                                    Nome no Cartão <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="card-name" 
+                                       placeholder="Como está escrito no cartão" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="card-expiry" class="form-label">
+                                        Validade <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="card-expiry" 
+                                           placeholder="MM/AA" maxlength="5" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="card-cvv" class="form-label">
+                                        CVV <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="card-cvv" 
+                                           placeholder="000" maxlength="4" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3" id="installments-container">
+                                <label for="installments" class="form-label">
+                                    Parcelas <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select" id="installments" required>
+                                    <!-- Opções geradas dinamicamente -->
+                                </select>
+                            </div>
+
+                            <!-- Informações do PIX -->
+                            <div id="pix-info" style="display: none;">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>Pagamento via PIX</strong><br>
+                                    Após confirmar o pedido, você receberá um QR Code para pagamento.
+                                    O pagamento é aprovado instantaneamente!
+                                </div>
+                                
+                                <div class="pix-benefits mb-3">
+                                    <h6 class="mb-3"><i class="fas fa-check-circle text-success me-2"></i>Vantagens do PIX</h6>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-bolt text-warning me-2"></i>Aprovação instantânea</li>
+                                        <li><i class="fas fa-shield-alt text-success me-2"></i>100% seguro</li>
+                                        <li><i class="fas fa-clock text-info me-2"></i>Disponível 24/7</li>
+                                        <li><i class="fas fa-mobile-alt text-primary me-2"></i>Pague pelo celular</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="security-badges">
+                                <div class="security-badge">
+                                    <i class="fas fa-lock"></i>
+                                    <span>Compra 100% Segura</span>
+                                </div>
+                                <div class="security-badge">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>Dados Protegidos</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-back" onclick="prevStep(1)">
+                                    <i class="fas fa-arrow-left me-2"></i>
+                                    Voltar
+                                </button>
+                                <button type="button" class="btn btn-checkout" onclick="nextStep(3)">
+                                    Continuar
+                                    <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Etapa 3: Confirmação -->
+                    <div class="form-section" id="section-review">
+                        <h4 class="mb-4">
+                            <i class="fas fa-check-circle me-2 text-success"></i>
+                            Revisar Pedido
+                        </h4>
+
+                        <div class="mb-4">
+                            <h6 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Endereço de Entrega</h6>
+                            <div class="p-3 bg-light rounded" id="review-address">
+                                <!-- Preenchido dinamicamente -->
+                            </div>
+                            <button class="btn btn-sm btn-link" onclick="prevStep(1)">
+                                <i class="fas fa-edit me-1"></i>Editar endereço
+                            </button>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-3"><i class="fas fa-credit-card me-2"></i>Forma de Pagamento</h6>
+                            <div class="p-3 bg-light rounded" id="review-payment">
+                                <!-- Preenchido dinamicamente -->
+                            </div>
+                            <button class="btn btn-sm btn-link" onclick="prevStep(2)">
+                                <i class="fas fa-edit me-1"></i>Editar pagamento
+                            </button>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="mb-3"><i class="fas fa-box me-2"></i>Itens do Pedido</h6>
+                            <div id="review-items">
+                                <!-- Preenchido dinamicamente -->
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Ao finalizar o pedido, você receberá um e-mail com os detalhes da compra.
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="button" class="btn btn-back" onclick="prevStep(2)">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Voltar
+                            </button>
+                            <button type="button" class="btn btn-checkout" onclick="finishOrder()" id="btn-finish">
+                                <i class="fas fa-check me-2"></i>
+                                Finalizar Pedido
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resumo do Pedido -->
+                <div class="order-summary">
+                    <h5 class="mb-3">Resumo do Pedido</h5>
+                    
+                    <div id="summary-items" class="mb-3">
+                        <!-- Itens do carrinho -->
+                    </div>
+
+                    <div class="summary-total">
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="summary-subtotal">R$ 0,00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>
+                                Frete
+                                <span id="free-shipping-badge" class="badge-free-shipping ms-2" style="display: none;">
+                                    GRÁTIS
+                                </span>
+                            </span>
+                            <span id="summary-shipping">R$ 0,00</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="summary-total">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <div id="installments-info" style="display: none;">
+                        <!-- Info de parcelamento -->
+                    </div>
+
+                    <div id="free-shipping-info" class="alert alert-success mt-3" style="display: none;">
+                        <i class="fas fa-truck me-2"></i>
+                        <strong>Frete Grátis!</strong> Você economizou <span id="shipping-saved"></span>
+                    </div>
+
+                    <div id="shipping-progress" class="mt-3" style="display: none;">
+                        <small class="text-muted">
+                            Faltam <strong id="shipping-remaining"></strong> para o frete grátis!
+                        </small>
+                        <div class="progress mt-2" style="height: 8px;">
+                            <div class="progress-bar bg-success" id="shipping-progress-bar" 
+                                 role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal PIX -->
+    <div class="modal fade" id="pixModal" tabindex="-1" aria-labelledby="pixModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="pixModalLabel">
+                        <i class="fas fa-qrcode me-2"></i>
+                        Pagamento via PIX
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-clock me-2"></i>
+                        <strong>Atenção:</strong> O QR Code expira em <span id="pix-timer">10:00</span> minutos
+                    </div>
+
+                    <!-- QR Code -->
+                    <div id="qr-code-container" class="mb-4">
+                        <div id="qr-code"></div>
+                    </div>
+
+                    <!-- Código PIX Copia e Cola -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Código PIX Copia e Cola:</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="pix-code" readonly>
+                            <button class="btn btn-success" type="button" onclick="copyPixCode()">
+                                <i class="fas fa-copy me-2"></i>
+                                Copiar
+                            </button>
+                        </div>
+                        <small class="text-muted">Copie e cole no app do seu banco</small>
+                    </div>
+
+                    <!-- Instruções -->
+                    <div class="text-start">
+                        <h6 class="fw-bold mb-3">Como pagar:</h6>
+                        <ol class="small">
+                            <li>Abra o app do seu banco</li>
+                            <li>Escolha pagar com PIX</li>
+                            <li>Escaneie o QR Code ou cole o código</li>
+                            <li>Confirme o pagamento</li>
+                        </ol>
+                    </div>
+
+                    <!-- Status do pagamento -->
+                    <div id="pix-status" class="alert alert-info" style="display: none;">
+                        <div class="spinner-border spinner-border-sm me-2" role="status">
+                            <span class="visually-hidden">Aguardando...</span>
+                        </div>
+                        Aguardando confirmação do pagamento...
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="simulatePixPayment()">
+                        <i class="fas fa-check me-2"></i>
+                        Simular Pagamento (Teste)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer incluído dinamicamente -->
+    <div id="footer-placeholder"></div>
+
+    <!-- QRCode.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/layout.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/checkout.js"></script>
+</body>
+</html>
+
+
