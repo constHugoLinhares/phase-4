@@ -15,152 +15,357 @@ document.addEventListener('DOMContentLoaded', function() {
     // Validação do formulário de contato
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', function(event) {
-
-            // Validar campos obrigatórios
-            const firstName = document.getElementById('firstName');
-            const lastName = document.getElementById('lastName');
-            const email = document.getElementById('email');
-            const subject = document.getElementById('subject');
-            const message = document.getElementById('message');
-
-            let isValid = true;
-
-            // Validar nome
-            if (!firstName.value.trim()) {
-                firstName.setCustomValidity('Por favor, informe seu nome.');
-                isValid = false;
+        // Obter referências dos campos
+        const fullName = document.getElementById('fullName');
+        const email = document.getElementById('email');
+        const message = document.getElementById('message');
+        const subject = document.getElementById('subject');
+        const phone = document.getElementById('phone');
+        const charCount = document.getElementById('charCount');
+        
+        // Função para validar Nome Completo
+        function validateFullName() {
+            const fullNameValue = fullName.value.trim();
+            const fullNameError = document.getElementById('fullNameError');
+            
+            if (!fullNameValue) {
+                fullName.setCustomValidity('Nome completo não pode ser em branco.');
+                if (fullNameError) {
+                    fullNameError.textContent = 'Nome completo não pode ser em branco.';
+                }
+                fullName.classList.add('is-invalid');
+                fullName.classList.remove('is-valid');
+                return false;
             } else {
-                firstName.setCustomValidity('');
-            }
-
-            // Validar sobrenome
-            if (!lastName.value.trim()) {
-                lastName.setCustomValidity('Por favor, informe seu sobrenome.');
-                isValid = false;
-            } else {
-                lastName.setCustomValidity('');
-            }
-
-            // Validar e-mail
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!email.value.trim() || !emailRegex.test(email.value)) {
-                email.setCustomValidity('Por favor, informe um e-mail válido.');
-                isValid = false;
-            } else {
-                email.setCustomValidity('');
-            }
-
-            // Validar assunto
-            if (!subject.value) {
-                subject.setCustomValidity('Por favor, selecione um assunto.');
-                isValid = false;
-            } else {
-                subject.setCustomValidity('');
-            }
-
-            // Validar mensagem
-            if (!message.value.trim() || message.value.trim().length < 10) {
-                message.setCustomValidity('Por favor, escreva uma mensagem com pelo menos 10 caracteres.');
-                isValid = false;
-            } else {
-                message.setCustomValidity('');
-            }
-
-            // Validar telefone se informado (também checar letras)
-            const phone = document.getElementById('phone');
-            if (phone && phone.value.trim()) {
-                const rawPhone = phone.value;
-
-                // Se houver letras, considerar inválido imediatamente
-                if (/[A-Za-zÀ-ÿ]/.test(rawPhone)) {
-                    phone.setCustomValidity('Por favor, informe apenas números no telefone.');
-                    isValid = false;
+                // Dividir em palavras (separadas por espaços)
+                const words = fullNameValue.split(/\s+/).filter(word => word.length > 0);
+                
+                // Verificar se tem pelo menos 2 palavras (nome e sobrenome)
+                if (words.length < 2) {
+                    fullName.setCustomValidity('É necessário informar nome e sobrenome.');
+                    if (fullNameError) {
+                        fullNameError.textContent = 'É necessário informar nome e sobrenome.';
+                    }
+                    fullName.classList.add('is-invalid');
+                    fullName.classList.remove('is-valid');
+                    return false;
                 } else {
-                    const digits = rawPhone.replace(/\D/g, '');
-                    const phoneRegex = /^[0-9]{10,11}$/;
-                    if (!phoneRegex.test(digits)) {
-                        phone.setCustomValidity('Por favor, informe um telefone válido (10 ou 11 dígitos).');
-                        isValid = false;
+                    // Verificar se cada palavra tem pelo menos 2 letras
+                    let allWordsValid = true;
+                    for (let word of words) {
+                        // Contar apenas letras (incluindo acentos)
+                        const lettersOnly = word.replace(/[^A-Za-zÀ-ÿ]/g, '');
+                        if (lettersOnly.length < 2) {
+                            allWordsValid = false;
+                            break;
+                        }
+                    }
+                    
+                    if (!allWordsValid) {
+                        fullName.setCustomValidity('Tanto o nome quanto o sobrenome devem ter ao menos duas letras cada.');
+                        if (fullNameError) {
+                            fullNameError.textContent = 'Tanto o nome quanto o sobrenome devem ter ao menos duas letras cada.';
+                        }
+                        fullName.classList.add('is-invalid');
+                        fullName.classList.remove('is-valid');
+                        return false;
                     } else {
-                        phone.setCustomValidity('');
+                        fullName.setCustomValidity('');
+                        if (fullNameError) {
+                            fullNameError.textContent = '';
+                        }
+                        fullName.classList.remove('is-invalid');
+                        fullName.classList.add('is-valid');
+                        return true;
                     }
                 }
             }
+        }
+        
+        // Função para validar E-mail
+        function validateEmail() {
+            const emailValue = email.value.trim();
+            const emailError = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailValue) {
+                email.setCustomValidity('E-mail não pode ser em branco.');
+                if (emailError) {
+                    emailError.textContent = 'E-mail não pode ser em branco.';
+                }
+                email.classList.add('is-invalid');
+                email.classList.remove('is-valid');
+                return false;
+            } else if (!emailRegex.test(emailValue)) {
+                email.setCustomValidity('E-mail deve ter um formato válido.');
+                if (emailError) {
+                    emailError.textContent = 'E-mail deve ter um formato válido.';
+                }
+                email.classList.add('is-invalid');
+                email.classList.remove('is-valid');
+                return false;
+            } else {
+                email.setCustomValidity('');
+                if (emailError) {
+                    emailError.textContent = '';
+                }
+                email.classList.remove('is-invalid');
+                email.classList.add('is-valid');
+                return true;
+            }
+        }
+        
+        // Função para validar Descrição da Mensagem
+        function validateMessage() {
+            const messageValue = message.value.trim();
+            const messageError = document.getElementById('messageError');
+            
+            // Atualizar contador de caracteres
+            if (charCount) {
+                const currentLength = message.value.length;
+                charCount.textContent = currentLength;
+                if (currentLength > 500) {
+                    charCount.classList.add('text-danger');
+                } else {
+                    charCount.classList.remove('text-danger');
+                }
+            }
+            
+            if (!messageValue) {
+                message.setCustomValidity('Descrição da mensagem não pode ser em branco.');
+                if (messageError) {
+                    messageError.textContent = 'Descrição da mensagem não pode ser em branco.';
+                }
+                message.classList.add('is-invalid');
+                message.classList.remove('is-valid');
+                return false;
+            } else if (messageValue.length > 500) {
+                message.setCustomValidity('Descrição da mensagem deve ter no máximo 500 caracteres.');
+                if (messageError) {
+                    messageError.textContent = 'Descrição da mensagem deve ter no máximo 500 caracteres.';
+                }
+                message.classList.add('is-invalid');
+                message.classList.remove('is-valid');
+                return false;
+            } else {
+                message.setCustomValidity('');
+                if (messageError) {
+                    messageError.textContent = '';
+                }
+                message.classList.remove('is-invalid');
+                message.classList.add('is-valid');
+                return true;
+            }
+        }
+        
+        // Função para validar Assunto
+        function validateSubject() {
+            if (!subject) return true;
+            
+            const subjectError = subject.parentElement.querySelector('.invalid-feedback');
+            if (!subject.value) {
+                subject.setCustomValidity('Por favor, selecione um assunto.');
+                if (subjectError) {
+                    subjectError.textContent = 'Por favor, selecione um assunto.';
+                }
+                subject.classList.add('is-invalid');
+                subject.classList.remove('is-valid');
+                return false;
+            } else {
+                subject.setCustomValidity('');
+                if (subjectError) {
+                    subjectError.textContent = '';
+                }
+                subject.classList.remove('is-invalid');
+                subject.classList.add('is-valid');
+                return true;
+            }
+        }
+        
+        // Função para validar Telefone
+        function validatePhone() {
+            if (!phone || !phone.value.trim()) {
+                // Telefone é opcional, então se estiver vazio, está válido
+                if (phone) {
+                    phone.classList.remove('is-invalid', 'is-valid');
+                    phone.setCustomValidity('');
+                }
+                return true;
+            }
+            
+            const phoneError = phone.parentElement.querySelector('.invalid-feedback');
+            const rawPhone = phone.value;
+            
+            if (/[A-Za-zÀ-ÿ]/.test(rawPhone)) {
+                phone.setCustomValidity('Por favor, informe apenas números no telefone.');
+                if (phoneError) {
+                    phoneError.textContent = 'Por favor, informe apenas números no telefone.';
+                }
+                phone.classList.add('is-invalid');
+                phone.classList.remove('is-valid');
+                return false;
+            } else {
+                const digits = rawPhone.replace(/\D/g, '');
+                const phoneRegex = /^[0-9]{10,11}$/;
+                if (!phoneRegex.test(digits)) {
+                    phone.setCustomValidity('Por favor, informe um telefone válido (10 ou 11 dígitos).');
+                    if (phoneError) {
+                        phoneError.textContent = 'Por favor, informe um telefone válido (10 ou 11 dígitos).';
+                    }
+                    phone.classList.add('is-invalid');
+                    phone.classList.remove('is-valid');
+                    return false;
+                } else {
+                    phone.setCustomValidity('');
+                    if (phoneError) {
+                        phoneError.textContent = '';
+                    }
+                    phone.classList.remove('is-invalid');
+                    phone.classList.add('is-valid');
+                    return true;
+                }
+            }
+        }
+        
+        // Adicionar validação em tempo real para Nome Completo
+        if (fullName) {
+            fullName.addEventListener('input', validateFullName);
+            fullName.addEventListener('blur', validateFullName);
+        }
+        
+        // Adicionar validação em tempo real para E-mail
+        if (email) {
+            email.addEventListener('input', validateEmail);
+            email.addEventListener('blur', validateEmail);
+        }
+        
+        // Adicionar validação em tempo real para Descrição da Mensagem
+        if (message) {
+            message.addEventListener('input', validateMessage);
+            message.addEventListener('blur', validateMessage);
+        }
+        
+        // Adicionar validação em tempo real para Assunto
+        if (subject) {
+            subject.addEventListener('change', validateSubject);
+        }
+        
+        // Adicionar validação em tempo real para Telefone (já existe, mas vamos garantir)
+        if (phone) {
+            phone.addEventListener('input', validatePhone);
+            phone.addEventListener('blur', validatePhone);
+        }
+
+        contactForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Validar todos os campos usando as funções de validação
+            const isFullNameValid = validateFullName();
+            const isEmailValid = validateEmail();
+            const isMessageValid = validateMessage();
+            const isSubjectValid = validateSubject();
+            const isPhoneValid = validatePhone();
+
+            const isValid = isFullNameValid && isEmailValid && isMessageValid && isSubjectValid && isPhoneValid;
 
             // Adicionar classes de validação
             contactForm.classList.add('was-validated');
 
             if (isValid) {
                 // Simular envio do formulário
-                showSuccessMessage();
+                showSuccessModal();
                 contactForm.reset();
                 contactForm.classList.remove('was-validated');
+                // Resetar contador de caracteres
+                if (charCount) {
+                    charCount.textContent = '0';
+                    charCount.classList.remove('text-danger');
+                }
+                // Limpar classes de validação
+                [fullName, email, message, subject, phone].forEach(field => {
+                    if (field) {
+                        field.classList.remove('is-invalid', 'is-valid');
+                    }
+                });
+            } else {
+                // Mostrar popup de erro
+                showErrorModal();
             }
         });
     }
 
-    // Immediate feedback for phone field: validate on input and blur
-    (function(){
-        const phoneInput = document.getElementById('phone');
-        if (!phoneInput) return;
 
-        const validatePhoneField = () => {
-            const raw = (phoneInput.value || '').trim();
-            const digits = raw.replace(/\D/g, '');
-
-            // vazio -> limpar estado
-            if (!raw) {
-                phoneInput.classList.remove('is-invalid');
-                phoneInput.classList.remove('is-valid');
-                phoneInput.setCustomValidity('');
-                return;
-            }
-
-            // se houver letras, marcar inválido (feedback imediato)
-            if (/[A-Za-zÀ-ÿ]/.test(raw)) {
-                phoneInput.classList.add('is-invalid');
-                phoneInput.classList.remove('is-valid');
-                phoneInput.setCustomValidity('Por favor, informe apenas números no telefone.');
-                return;
-            }
-
-            if (digits.length === 10 || digits.length === 11) {
-                phoneInput.classList.remove('is-invalid');
-                phoneInput.classList.add('is-valid');
-                phoneInput.setCustomValidity('');
-            } else {
-                phoneInput.classList.add('is-invalid');
-                phoneInput.classList.remove('is-valid');
-                phoneInput.setCustomValidity('Por favor, informe um telefone válido (10 ou 11 dígitos).');
-            }
-        };
-
-        phoneInput.addEventListener('input', validatePhoneField);
-        phoneInput.addEventListener('blur', validatePhoneField);
-    })();
-
-    // Função para mostrar mensagem de sucesso
-    function showSuccessMessage() {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = 'alert alert-success alert-dismissible fade show';
-        alertDiv.innerHTML = `
-            <i class="fas fa-check-circle me-2"></i>
-            Mensagem enviada com sucesso! Entraremos em contato em breve.
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    // Função para mostrar notificação de sucesso
+    function showSuccessModal() {
+        const toastContainer = document.querySelector('.toast-container');
+        if (!toastContainer) return;
+        
+        // Criar elemento toast
+        const toastId = 'success-toast-' + Date.now();
+        const toastHTML = `
+            <div id="${toastId}" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-check-circle me-2"></i>
+                        <strong>Mensagem Enviada!</strong><br>
+                        Sua mensagem foi enviada com sucesso! Entraremos em contato em breve.
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
         `;
         
-        const pageHeader = document.querySelector('.page-header');
-        if (pageHeader) {
-            pageHeader.insertAdjacentElement('afterend', alertDiv);
-            
-            // Remover o alerta após 5 segundos
-            setTimeout(() => {
-                if (alertDiv.parentNode) {
-                    alertDiv.remove();
-                }
-            }, 5000);
-        }
+        toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+        
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 5000
+        });
+        
+        toast.show();
+        
+        // Remover o elemento do DOM após ser escondido
+        toastElement.addEventListener('hidden.bs.toast', function() {
+            toastElement.remove();
+        });
+    }
+    
+    // Função para mostrar notificação de erro
+    function showErrorModal() {
+        const toastContainer = document.querySelector('.toast-container');
+        if (!toastContainer) return;
+        
+        // Criar elemento toast
+        const toastId = 'error-toast-' + Date.now();
+        const toastHTML = `
+            <div id="${toastId}" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Erro ao Enviar</strong><br>
+                        Por favor, corrija os erros abaixo antes de enviar a mensagem.
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        `;
+        
+        toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+        
+        const toastElement = document.getElementById(toastId);
+        const toast = new bootstrap.Toast(toastElement, {
+            autohide: true,
+            delay: 5000
+        });
+        
+        toast.show();
+        
+        // Remover o elemento do DOM após ser escondido
+        toastElement.addEventListener('hidden.bs.toast', function() {
+            toastElement.remove();
+        });
     }
 
     // Função para adicionar produto ao carrinho
@@ -373,6 +578,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         buttons.forEach(button => {
             button.addEventListener('click', function() {
+                // Não adicionar "Processando" ao botão de envio do formulário de contato
+                if (this.closest('#contactForm')) {
+                    return;
+                }
+                
                 if (this.type === 'submit' || this.textContent.includes('Adicionar')) {
                     const originalText = this.innerHTML;
                     this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processando...';
