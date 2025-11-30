@@ -182,18 +182,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Função para validar Telefone
+        // Função para validar Telefone (agora obrigatório)
         function validatePhone() {
-            if (!phone || !phone.value.trim()) {
-                // Telefone é opcional, então se estiver vazio, está válido
-                if (phone) {
-                    phone.classList.remove('is-invalid', 'is-valid');
-                    phone.setCustomValidity('');
+            if (!phone) return false;
+            
+            const phoneValue = phone.value.trim();
+            const phoneError = document.getElementById('phoneError');
+            
+            // Telefone é obrigatório, então se estiver vazio, deve mostrar erro
+            if (!phoneValue) {
+                phone.setCustomValidity('Telefone não pode ser em branco.');
+                if (phoneError) {
+                    phoneError.textContent = 'Telefone não pode ser em branco.';
                 }
-                return true;
+                phone.classList.add('is-invalid');
+                phone.classList.remove('is-valid');
+                return false;
             }
             
-            const phoneError = phone.parentElement.querySelector('.invalid-feedback');
             const rawPhone = phone.value;
             
             if (/[A-Za-zÀ-ÿ]/.test(rawPhone)) {
@@ -250,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
             subject.addEventListener('change', validateSubject);
         }
         
-        // Adicionar validação em tempo real para Telefone (já existe, mas vamos garantir)
+        // Adicionar validação em tempo real para Telefone (agora obrigatório)
         if (phone) {
             phone.addEventListener('input', validatePhone);
             phone.addEventListener('blur', validatePhone);

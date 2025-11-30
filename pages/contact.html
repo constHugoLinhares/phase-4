@@ -159,12 +159,12 @@
                                             </div>
                                         </div> -->
                                         <div class="mb-3">
-                                            <label for="phone" class="form-label">Telefone</label>
+                                            <label for="phone" class="form-label">Telefone *</label>
                                             <!-- inputmode para teclado móvel; maxlength para limitar entrada formatada -->
                                             <input type="tel" inputmode="tel" class="form-control" id="phone" name="phone" autocomplete="tel"
-                                                placeholder="(99) 99999-9999" maxlength="20" aria-describedby="phoneHelp">
+                                                placeholder="(99) 99999-9999" maxlength="20" required aria-describedby="phoneHelp phoneError">
                                             <div class="form-text" id="phoneHelp">Digite apenas números ou use formatação. Validação aceitará 10 ou 11 dígitos.</div>
-                                            <div class="invalid-feedback">
+                                            <div id="phoneError" class="invalid-feedback">
                                                 Por favor, informe um telefone válido (10 ou 11 dígitos).
                                             </div>
                                         </div>
